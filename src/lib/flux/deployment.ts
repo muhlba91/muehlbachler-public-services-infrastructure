@@ -1,6 +1,5 @@
 import { local } from '@pulumi/command';
 import * as gcp from '@pulumi/gcp';
-import * as kubernetes from '@pulumi/kubernetes';
 import { Resource } from '@pulumi/pulumi';
 
 import { ClusterData } from '../../model/cluster';
@@ -20,7 +19,6 @@ import { renderTemplate } from '../util/template';
  */
 export const deployArgo = async (
   argocdAdminPassword: string,
-  namespace: kubernetes.core.v1.Namespace,
   serviceAccount: gcp.serviceaccount.Account,
   cluster: ClusterData,
 ) => {
@@ -44,7 +42,7 @@ export const deployArgo = async (
       },
     },
     {
-      dependsOn: [serviceAccount, cluster.resource, namespace],
+      dependsOn: [serviceAccount, cluster.resource],
     },
   );
 

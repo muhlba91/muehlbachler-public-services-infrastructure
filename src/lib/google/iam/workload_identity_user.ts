@@ -8,13 +8,13 @@ import { createIAMBinding } from './binding';
  * Creates a workload identity user binding.
  *
  * @param {Output<string>} serviceAccount the service account id
- * @param {Output<string>} namespace the namespace name
- * @param {Output<string>} kubernetesServiceAccount the kubernetes service account in the namespace
+ * @param {string} namespace the namespace name
+ * @param {string} kubernetesServiceAccount the kubernetes service account in the namespace
  */
 export const createWorkloadIdentityUserBinding = (
   serviceAccount: Output<string>,
-  namespace: Output<string>,
-  kubernetesServiceAccount: Output<string>,
+  namespace: string,
+  kubernetesServiceAccount: string,
 ) => {
   all([serviceAccount, namespace, kubernetesServiceAccount]).apply(
     ([accountId, k8sNamespace, k8sServiceAccount]) =>

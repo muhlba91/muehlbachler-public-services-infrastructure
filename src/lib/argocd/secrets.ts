@@ -14,11 +14,12 @@ import { getGitHubRepository } from '../util/github';
  */
 export const deploySecrets = async (
   argocdAdminPassword: string,
+  namespace: kubernetes.core.v1.Namespace,
   cluster: ClusterData,
   provider: kubernetes.Provider,
 ) => {
-  deployAdminPasswordSecrets(argocdAdminPassword, cluster, provider);
-  await deployRepositorySecrets(cluster, provider);
+  deployAdminPasswordSecrets(argocdAdminPassword, cluster, namespace, provider);
+  await deployRepositorySecrets(cluster, namespace, provider);
 };
 
 /**
@@ -31,6 +32,7 @@ export const deploySecrets = async (
 const deployAdminPasswordSecrets = (
   argocdAdminPassword: string,
   cluster: ClusterData,
+  namespace: kubernetes.core.v1.Namespace,
   provider: kubernetes.Provider,
 ) => {
   new kubernetes.core.v1.Secret(
@@ -46,7 +48,7 @@ const deployAdminPasswordSecrets = (
     },
     {
       provider: provider,
-      dependsOn: [cluster.resource],
+      dependsOn: [cluster.resource, namespace],
       deleteBeforeReplace: true,
     },
   );
@@ -60,6 +62,7 @@ const deployAdminPasswordSecrets = (
  */
 export const deployRepositorySecrets = async (
   cluster: ClusterData,
+  namespace: kubernetes.core.v1.Namespace,
   provider: kubernetes.Provider,
 ) => {
   const applicationsRepository = (
@@ -81,7 +84,7 @@ export const deployRepositorySecrets = async (
     },
     {
       provider: provider,
-      dependsOn: [cluster.resource],
+      dependsOn: [cluster.resource, namespace],
       deleteBeforeReplace: true,
     },
   );

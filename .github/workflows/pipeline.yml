@@ -9,7 +9,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
   preview:
@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: 'google-github-actions/auth@v1'
+      - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
@@ -73,12 +73,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: 'google-github-actions/auth@v1'
+      - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
       - uses: simenandre/setup-gke-gcloud-auth-plugin@v1
+
+      - uses: fluxcd/flux2/action@main
 
       - run: |
           npm install -g yarn
@@ -96,3 +98,16 @@ jobs:
           DOPPLER_TOKEN: "${{ secrets.DOPPLER_TOKEN }}"
           GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
           PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
+
+      - run: |
+          flux bootstrap github \
+            --components source-controller,kustomize-controller,helm-controller,notification-controller \
+            --cluster-domain prod.public-services.cluster \
+            --owner ${{ github.repository_owner }} \
+            --repository ${{ github.event.repository.name }} \
+            --branch main \
+            --path ./cluster-bootstrap/ \
+            --personal \
+            --interval 5m \
+            --author-name "github-actions[bot]" \
+            --author-email "${{ github.action }}+github-actions[bot]@users.noreply.github.com"

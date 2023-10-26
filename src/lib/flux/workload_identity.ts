@@ -6,13 +6,12 @@ import { createServiceAccount } from '../google/iam/service_account';
 import { createWorkloadIdentityUserBinding } from '../google/iam/workload_identity_user';
 
 /**
- * Creates the ArgoCD service account and workload identity.
+ * Creates the FluxCD Google service account and workload identity.
  *
  * @returns {gcp.serviceaccount.Account} the service account
  */
-export const createArgoWorkloadIdentity = (): gcp.serviceaccount.Account => {
-  const name = 'ksops';
-  const serviceAccount = createServiceAccount(name, {});
+export const createFluxWorkloadIdentity = (): gcp.serviceaccount.Account => {
+  const serviceAccount = createServiceAccount('flux', {});
 
   serviceAccount.email.apply((email) =>
     createCryptoKeyIAMMember(
@@ -23,7 +22,11 @@ export const createArgoWorkloadIdentity = (): gcp.serviceaccount.Account => {
     ),
   );
 
-  createWorkloadIdentityUserBinding(serviceAccount.id, 'argocd', 'argocd');
+  createWorkloadIdentityUserBinding(
+    serviceAccount.id,
+    'flux-system',
+    'kustomize-controller',
+  );
 
   return serviceAccount;
 };

@@ -1,0 +1,14 @@
+---
+extends: default
+
+ignore:
+  - Pulumi*.yaml
+  - node_modules/
+  - cluster-bootstrap/flux-system/gotk-components.yaml
+
+rules:
+  line-length:
+    max: 160
+  truthy:
+    ignore:
+      - .github/

@@ -37,15 +37,11 @@ export const createArgoResources = async (
     },
   );
 
-  const serviceAccount = createArgoWorkloadIdentity(
-    namespace,
-    cluster,
-    kubernetesProvider,
-  );
+  const serviceAccount = createArgoWorkloadIdentity();
 
   adminPassword.password.apply(async (password) => {
-    await deploySecrets(password, cluster, kubernetesProvider);
-    await deployArgo(password, serviceAccount, cluster);
+    await deploySecrets(password, namespace, cluster, kubernetesProvider);
+    await deployArgo(password, namespace, serviceAccount, cluster);
   });
 
   return adminPassword;

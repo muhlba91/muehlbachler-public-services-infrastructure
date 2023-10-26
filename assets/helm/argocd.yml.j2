@@ -15,8 +15,8 @@ server:
 
 repoServer:
   serviceAccount:
-    create: false
-    name: argocd
+    annotations:
+      iam.gke.io/gcp-service-account: pub-svcs-ksops-prod@public-services-402810.iam.gserviceaccount.com
   env:
     - name: XDG_CONFIG_HOME
       value: /.config

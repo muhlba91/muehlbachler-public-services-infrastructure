@@ -60,6 +60,18 @@ jobs:
           yarn audit
         continue-on-error: true
 
+  yamllint:
+    runs-on: ubuntu-latest
+    name: Lint YAML
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: |
+          yamllint .
+
   build:
     runs-on: ubuntu-latest
     name: Build IaC code
@@ -85,9 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Pulumi Preview
     needs:
-      - conform
       - lint
-      - audit
       - build
     permissions:
       id-token: write
@@ -107,7 +117,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: 'google-github-actions/auth@v1'
+      - uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}

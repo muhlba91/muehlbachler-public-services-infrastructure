@@ -4,6 +4,7 @@ import { createArgoResources } from './lib/argocd';
 import { createCertManagerResources } from './lib/cert_manager';
 import { edgeInstanceConfig } from './lib/configuration';
 import { createExternalDNSResources } from './lib/external_dns';
+import { createFluxResources } from './lib/flux';
 import { createCluster } from './lib/google/cluster/create';
 import { createEdgeResources } from './lib/google/edge';
 import { createNetwork } from './lib/google/network/network';
@@ -34,9 +35,10 @@ export = async () => {
   );
 
   // cluster resources
-  createExternalDNSResources(cluster, kubernetesProvider);
-  createCertManagerResources(cluster, kubernetesProvider);
+  const externalDnsServiceAccount = createExternalDNSResources();
+  const certManagerServiceAccount = createCertManagerResources();
   const argocdPassword = await createArgoResources(cluster, kubernetesProvider);
+  const fluxServiceAccount = createFluxResources();
 
   // edge instance
   createEdgeResources(network);
@@ -50,6 +52,15 @@ export = async () => {
       },
       argocd: {
         password: argocdPassword.password,
+      },
+      fluxcd: {
+        serviceAccount: fluxServiceAccount.email,
+      },
+      certManager: {
+        serviceAccount: certManagerServiceAccount.email,
+      },
+      externalDns: {
+        serviceAccount: externalDnsServiceAccount.email,
       },
     },
     edge: {
