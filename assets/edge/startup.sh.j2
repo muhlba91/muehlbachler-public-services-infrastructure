@@ -1,14 +1,27 @@
 #!/bin/bash
 
+# config hash: {{ hash }}
+
 # system
 echo "[system] updating apt cache..."
 apt-get update
 
-# haproxy: {{ hash.haproxy }}
+# haproxy
 echo "[haproxy] installing and configuring..."
-apt-get install --yes haproxy
+DEBIAN_FRONTEND=noninteractive apt-get install --yes haproxy
 gcloud storage cp gs://{{ bucket.id }}/{{ bucket.path }}/haproxy/** /etc/haproxy/
 
 echo "[haproxy] enabling and starting..."
 systemctl enable --now haproxy
 systemctl restart haproxy
+
+# postfix
+echo "[postfix] installing and configuring..."
+DEBIAN_FRONTEND=noninteractive apt-get install --yes postfix postfix-pgsql postfix-pcre libsasl2-modules postgresql-client
+gcloud storage cp gs://{{ bucket.id }}/{{ bucket.path }}/postfix/** /etc/postfix/
+postmap hash:/etc/postfix/sasl_passwd
+
+# FIXME: enable
+echo "[postfix] enabling and starting..."
+#systemctl enable --now postfix
+#systemctl restart postfix

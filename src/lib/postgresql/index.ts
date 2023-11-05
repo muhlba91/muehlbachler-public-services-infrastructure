@@ -1,5 +1,7 @@
 import * as pg from '@pulumi/postgresql';
 
+import { StringMap } from '../../model/map';
+import { PostgresqlUserData } from '../../model/postgresql';
 import { globalName, postgresqlConfig } from '../configuration';
 import { writeToDoppler } from '../util/doppler';
 
@@ -8,8 +10,10 @@ import { createUsers } from './user';
 
 /**
  * Creates the Postgresql databases and users.
+ *
+ * @returns {StringMap<PostgresqlUserData>} a map containing users and their passwords
  */
-export const createPostgresql = () => {
+export const createPostgresql = (): StringMap<PostgresqlUserData> => {
   const pgProvider = new pg.Provider(
     'postgresql',
     {
@@ -34,6 +38,7 @@ export const createPostgresql = () => {
     `${globalName}-cluster-database`,
   );
 
-  createUsers(pgProvider);
-  createDatabases(pgProvider);
+  const users = createUsers(pgProvider);
+  createDatabases(users, pgProvider);
+  return users;
 };

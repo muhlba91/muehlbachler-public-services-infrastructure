@@ -1,42 +1,25 @@
-import { Output } from '@pulumi/pulumi';
-
+import { StringMap } from '../../../model/map';
 import { NetworkData } from '../../../model/network';
-import { environment, globalName, ingressConfig } from '../../configuration';
-import { createRandomPassword } from '../../util/random';
-import { writeFilePulumiAndUploadToS3 } from '../../util/storage';
-import { renderTemplate } from '../../util/template';
+import { PostgresqlUserData } from '../../../model/postgresql';
 import { createEdgeInstanceFirewalls } from '../network/firewall';
 
+import { createHAProxyResources } from './haproxy';
 import { createEdgeInstance } from './instance';
+import { createPostfixResources } from './postfix';
 
 /**
  * Creates an edge resources.
  *
  * @param {NetworkData} network the network
+ * @param {StringMap<PostgresqlUserData>} postgresqlUsers a map containing users and their passwords
  */
-export const createEdgeResources = (network: NetworkData) => {
-  const haproxyConfig = writeFilePulumiAndUploadToS3(
-    'haproxy.cfg',
-    Output.create(
-      renderTemplate('./assets/edge/haproxy.cfg.j2', {
-        proxies: Object.entries(ingressConfig.service)
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .filter(([_, config]) => config.target != undefined)
-          .map(([name, config]) => ({
-            name: name,
-            port: config.port,
-            target: `${config.target?.service}.svc.${environment}.${globalName}.cluster:${config.target?.port}`,
-          })),
-      }),
-    ),
-    {
-      s3SubPath: 'haproxy/',
-    },
-  );
+export const createEdgeResources = (
+  network: NetworkData,
+  postgresqlUsers: StringMap<PostgresqlUserData>,
+) => {
+  const haproxyConfig = createHAProxyResources();
+  const postfixConfigs = createPostfixResources(postgresqlUsers);
 
-  const statsPassword = createRandomPassword('haproxy-stats-password', {
-    special: false,
-  });
-  createEdgeInstance(network, statsPassword.password, haproxyConfig);
+  createEdgeInstance(network, postfixConfigs.concat(haproxyConfig));
   createEdgeInstanceFirewalls(network);
 };

@@ -286,6 +286,17 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
+"@pulumi/aws@^6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/aws/-/aws-6.7.0.tgz#50b4d7d3d604c21bbef404b9c1563485b9c7f16b"
+  integrity sha512-7COqQ4jkXNtfcfoNbLAvp1BK00STwNLnsM9liKl4MnRiKg7+wL+Z7jz7UiIE8m9ZqxW10wEVW8Inj92TkgjwVg==
+  dependencies:
+    "@pulumi/pulumi" "^3.0.0"
+    builtin-modules "3.0.0"
+    mime "^2.0.0"
+    read-package-tree "^5.2.1"
+    resolve "^1.7.1"
+
 "@pulumi/gcp@^6.67.0":
   version "6.67.0"
   resolved "https://registry.yarnpkg.com/@pulumi/gcp/-/gcp-6.67.0.tgz#6ad5f344816db89c73e1dfefa6a21e54a3194bd2"
@@ -342,6 +353,13 @@
   version "4.14.0"
   resolved "https://registry.yarnpkg.com/@pulumi/random/-/random-4.14.0.tgz#d0ff92594fff7e2f9e303ec193953002860eddd8"
   integrity sha512-R9GgDbX/PR53C3a9V55FrOHwS3k7YEUr6bDnPcXI3M9PEELFIprYQRnO0oafpE4je5NRxY5a0qQ+TJQLpkhSkA==
+  dependencies:
+    "@pulumi/pulumi" "^3.0.0"
+
+"@pulumi/tls@^4.11.1":
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/@pulumi/tls/-/tls-4.11.1.tgz#37ebaf32e90314d58cc0f2c172778cc587136432"
+  integrity sha512-etm2mPrkYUWCPPZTfA1Oplx4tNTZL2fRh9RbKuOOrYBnDLnLkvkcJGvPFIG37VJvMdX5BDL51He5zQqSmq1HBQ==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
@@ -841,6 +859,11 @@ buffer-from@^1.0.0, buffer-from@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
+
+builtin-modules@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.0.0.tgz#1e587d44b006620d90286cc7a9238bbc6129cab1"
+  integrity sha512-hMIeU4K2ilbXV6Uv93ZZ0Avg/M91RaKXucQ+4me2Do1txxBDyDZWCBa5bJSLqoNTRpXTLwEzIk1KmloenDDjhg==
 
 call-bind@^1.0.0, call-bind@^1.0.2, call-bind@^1.0.4, call-bind@^1.0.5:
   version "1.0.5"
@@ -1926,6 +1949,11 @@ micromatch@^4.0.4:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
+mime@^2.0.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.6.0.tgz#a2a682a95cd4d0cb1d6257e28f83da7e35800367"
+  integrity sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==
+
 mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
@@ -2278,7 +2306,7 @@ read-package-json@^2.0.0, read-package-json@^2.0.13:
     normalize-package-data "^2.0.0"
     npm-normalize-package-bin "^1.0.0"
 
-read-package-tree@^5.3.1:
+read-package-tree@^5.2.1, read-package-tree@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/read-package-tree/-/read-package-tree-5.3.1.tgz#a32cb64c7f31eb8a6f31ef06f9cedf74068fe636"
   integrity sha512-mLUDsD5JVtlZxjSlPPx1RETkNjjvQYuweKwNVt1Sn8kP5Jh44pvYuUHCp6xSVDZWbNxVxG5lyZJ921aJH61sTw==
@@ -2339,7 +2367,7 @@ resolve-from@^4.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
   integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
-resolve@^1.10.0, resolve@^1.22.1, resolve@^1.22.4:
+resolve@^1.10.0, resolve@^1.22.1, resolve@^1.22.4, resolve@^1.7.1:
   version "1.22.8"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
   integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==

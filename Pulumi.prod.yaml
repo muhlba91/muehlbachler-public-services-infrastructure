@@ -35,8 +35,10 @@ config:
   muehlbachler-public-services:database:
     database:
       authentik: authentik
+      simplelogin: simplelogin
     users:
       - authentik
+      - simplelogin
   muehlbachler-public-services:edgeInstance:
     diskSize: 10
     hostname: edge.muehlbachler.io
@@ -47,11 +49,9 @@ config:
       subnet: edge
     sourceImage: debian-cloud/debian-12
     zone: europe-west4-a
+  muehlbachler-public-services:google:
+    dnsProject: muehlbachler-dns
   muehlbachler-public-services:ingress:
-    port:
-      mail:
-        numbers:
-          - 25
     service:
       http:
         port: 80
@@ -68,6 +68,25 @@ config:
         target:
           port: 8636
           service: traefik.traefik
+      simplelogin:
+        exposed: false
+        port: 20381
+        target:
+          port: 20381
+          service: handler.simplelogin
+      smtp:
+        exposed: false
+        port: 25
+  muehlbachler-public-services:mail:
+    domain: email.muehlbachler.io
+    relay:
+      host: mail.email.muehlbachler.io
+      password:
+        secure: AAABADVxL1RJyz1yZxJo7JKvv/GVoXPs3nFSohYX/Zwsxs7wSjmpCDVOLvLxqz42xJ50dzJMJH4=
+      port: 587
+      username: daemon@email.muehlbachler.io
+    spfInclude: mxroute.com
+    zoneId: email-muehlbachler-io
   muehlbachler-public-services:network:
     externalIp:
       edge:

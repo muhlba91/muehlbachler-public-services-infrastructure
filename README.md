@@ -36,6 +36,9 @@ yarn build; pulumi destroy
 
 To successfully run, and configure the Pulumi plugins, you need to set a list of environment variables. Alternatively, refer to the used Pulumi provider's configuration documentation.
 
+- `AWS_REGION`: the AWS region
+- `AWS_ACCESS_KEY_ID`: the AWS access key identifier
+- `AWS_SECRET_ACCESS_KEY`: the AWS secret access key
 - `CLOUDSDK_CORE_PROJECT`: the Google Cloud (GCP) project
 - `CLOUDSDK_COMPUTE_REGION` the Google Cloud (GCP) region
 - `GOOGLE_APPLICATION_CREDENTIALS`: reference to a file containing the Google Cloud (GCP) service account credentials
@@ -139,6 +142,29 @@ cluster:
       location: the location of the encryption key (used by ArgoCD ksops)
       keyringId: the keyring identifier
       cryptoKeyId: the crypto key identifier for the specified keyring
+```
+
+### Mail
+
+The edge instance also handles the mail relay.
+
+```yaml
+mail:
+  domain: the base domain for the relay
+  zoneId: the Google Cloud zone of the instance
+  spfInclude: additional include entry for the SPF record
+  relay:
+    host: the host of the outgoing mail relay
+    port: the port of the outgoing mail relay
+    username: the username to authenticate against the outgoing relay
+    password: the password to authenticate against the outgoing relay
+```
+
+### Google
+
+```yaml
+google:
+  dnsProject: the project name which hosts the DNS zones
 ```
 
 ### Bucket

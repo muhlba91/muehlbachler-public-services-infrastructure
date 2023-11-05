@@ -124,6 +124,11 @@ jobs:
 
       - uses: simenandre/setup-gke-gcloud-auth-plugin@v1
 
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_IDENTITY_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - run: |
           npm install -g yarn
 
@@ -139,6 +144,7 @@ jobs:
           refresh: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         env:
           CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
+          AWS_REGION: "${{ secrets.AWS_REGION }}"
           DOPPLER_TOKEN: "${{ secrets.DOPPLER_TOKEN }}"
           GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
           PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"

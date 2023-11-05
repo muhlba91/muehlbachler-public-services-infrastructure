@@ -19,14 +19,16 @@ export const INSTANCE_NAME = `${globalName}-edge-${environment}`;
  * Creates an edge instance.
  *
  * @param {NetworkData} network the network
- * @param {Output<string>} statsPassword the haproxy stats page admin password
- * @param {Output<gcp.storage.BucketObject>} haproxyConfig the haproxy configuration
+ * @param {Output<gcp.storage.BucketObject>[]} configs the configurations
  */
 export const createEdgeInstance = (
   network: NetworkData,
-  statsPassword: Output<string>,
-  haproxyConfig: Output<gcp.storage.BucketObject>,
+  configs: readonly Output<gcp.storage.BucketObject>[],
 ) => {
+  const md5ConfigHashes = all(configs.map((file) => file.detectMd5hash)).apply(
+    (hashes) => hashes.join(','),
+  );
+
   const serviceAccount = createServiceAccount('edge-ingress', {
     roles: ['roles/storage.objectViewer'],
   });
@@ -71,22 +73,15 @@ export const createEdgeInstance = (
           subnetwork: subnetworkId,
         },
       ],
-      metadata: all([statsPassword, haproxyConfig.detectMd5hash]).apply(
-        ([haproxyStatsPassword, haproxyConfigMd5]) => ({
-          'startup-script': renderTemplate('./assets/edge/startup.sh.j2', {
-            bucket: {
-              id: bucketId,
-              path: BUCKET_PATH,
-            },
-            stats: {
-              password: haproxyStatsPassword,
-            },
-            hash: {
-              haproxy: haproxyConfigMd5,
-            },
-          }),
+      metadata: md5ConfigHashes.apply((md5ConfigHash) => ({
+        'startup-script': renderTemplate('./assets/edge/startup.sh.j2', {
+          bucket: {
+            id: bucketId,
+            path: BUCKET_PATH,
+          },
+          hash: md5ConfigHash,
         }),
-      ),
+      })),
       scheduling: {
         automaticRestart: true,
         onHostMaintenance: 'MIGRATE',
@@ -100,7 +95,7 @@ export const createEdgeInstance = (
       tags: [INSTANCE_NAME],
     },
     {
-      dependsOn: [haproxyConfig],
+      dependsOn: Output.create(configs.map((file) => file)),
     },
   );
 
@@ -154,7 +149,7 @@ export const createEdgeInstance = (
     },
     {
       deleteBeforeReplace: true,
-      dependsOn: [haproxyConfig],
+      dependsOn: Output.create(configs.map((file) => file)),
       ignoreChanges: ['metadata', 'metadataFingerprint'],
     },
   );

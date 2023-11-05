@@ -33,19 +33,3 @@ resolvers internal
     parse-resolv-conf
     hold valid 1h
     hold nx 30s
-
-# statistics
-userlist stats_auth
-    user admin insecure-password {{ stats.password }}
-
-frontend stats
-    bind 127.0.0.1:8888
-    mode http
-    stats enable
-    stats uri /stats
-    stats hide-version
-    stats refresh 30s
-    acl auth_ok http_auth(stats_auth)
-    stats http-request allow if auth_ok
-    stats http-request auth realm HAProxy\ Statistics
-    stats admin if TRUE

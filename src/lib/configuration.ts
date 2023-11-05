@@ -8,19 +8,23 @@ import {
 import { ClusterConfig } from '../model/config/cluster';
 import { DatabaseConfig } from '../model/config/database';
 import { EdgeInstanceConfig } from '../model/config/edge_instance';
+import { GoogleConfig } from '../model/config/google';
 import { IngressConfig } from '../model/config/ingress';
+import { MailConfig } from '../model/config/mail';
 import { NetworkConfig } from '../model/config/network';
 
 export const environment = getStack();
 
 const config = new Config();
 export const bucketId = config.require('bucketId');
+export const googleConfig = config.requireObject<GoogleConfig>('google');
 export const networkConfig = config.requireObject<NetworkConfig>('network');
 export const clusterConfig = config.requireObject<ClusterConfig>('cluster');
 export const edgeInstanceConfig =
   config.requireObject<EdgeInstanceConfig>('edgeInstance');
 export const ingressConfig = config.requireObject<IngressConfig>('ingress');
 export const databaseConfig = config.requireObject<DatabaseConfig>('database');
+export const mailConfig = config.requireObject<MailConfig>('mail');
 
 const sharedServicesStack = new StackReference(
   `${getOrganization()}/muehlbachler-shared-services/${environment}`,
@@ -35,6 +39,8 @@ export const postgresqlConfig = sharedServicesStackAws.apply((output) => ({
 
 export const globalName = 'public-services';
 export const globalShortName = 'pub-svcs';
+
+export const awsDefaultRegion = 'eu-west-1';
 
 export const commonLabels = {
   environment: environment,

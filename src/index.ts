@@ -6,6 +6,7 @@ import { createCluster } from './lib/google/cluster/create';
 import { createEdgeResources } from './lib/google/edge';
 import { createNetwork } from './lib/google/network/network';
 import { createPostgresql } from './lib/postgresql';
+import { createSimpleloginResources } from './lib/simplelogin';
 import { createDir } from './lib/util/create_dir';
 import { writeFilePulumiAndUploadToS3 } from './lib/util/storage';
 
@@ -16,7 +17,7 @@ export = async () => {
   const network = createNetwork();
 
   // database
-  createPostgresql();
+  const postgresqlUsers = createPostgresql();
 
   // cluster
   const cluster = createCluster(network);
@@ -27,8 +28,13 @@ export = async () => {
   const certManagerServiceAccount = createCertManagerResources();
   const fluxServiceAccount = createFluxResources();
 
+  // simplelogin resources
+  const dkimPublicKey = createSimpleloginResources(
+    network.externalIPs[edgeInstanceConfig.network.externalIp],
+  );
+
   // edge instance
-  createEdgeResources(network);
+  createEdgeResources(network, postgresqlUsers);
 
   return {
     cluster: {
@@ -53,6 +59,11 @@ export = async () => {
           .address,
         ipv6: network.externalIPs[edgeInstanceConfig.network.externalIp].ipv6
           ?.address,
+      },
+    },
+    mail: {
+      dkim: {
+        publicKey: dkimPublicKey,
       },
     },
   };
