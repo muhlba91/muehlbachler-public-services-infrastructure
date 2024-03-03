@@ -475,9 +475,9 @@
     read-package-json "^2.0.13"
 
 "@pulumi/postgresql@^3.10.0":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@pulumi/postgresql/-/postgresql-3.10.1.tgz#7f7583609dabea796db39bfc04903896e8349e54"
-  integrity sha512-RzRoLHw5n7I/38w8vkVn5cfwCPBpQ+JcQcVRDqJrC2UH+cNK6RKmG9jwxzN0dtPhQDG6jVlGTFq9CNV+uG9xUg==
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/postgresql/-/postgresql-3.11.0.tgz#dcdc2fcbcee1203ade1bef84ac4e74ee7c758998"
+  integrity sha512-Ztz4vsphQJH6785iN+ANUqi8xGQEOccDTQJucV3klICOUNZxLkCpwus6rECgcPGFcAOZpm71Rf4pICzY0mFx6A==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
