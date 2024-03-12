@@ -11,6 +11,7 @@ import { EdgeInstanceConfig } from '../model/config/edge_instance';
 import { GoogleConfig } from '../model/config/google';
 import { IngressConfig } from '../model/config/ingress';
 import { MailConfig } from '../model/config/mail';
+import { MongoDBConfig } from '../model/config/mongodb';
 import { NetworkConfig } from '../model/config/network';
 
 export const environment = getStack();
@@ -24,6 +25,7 @@ export const edgeInstanceConfig =
   config.requireObject<EdgeInstanceConfig>('edgeInstance');
 export const ingressConfig = config.requireObject<IngressConfig>('ingress');
 export const databaseConfig = config.requireObject<DatabaseConfig>('database');
+export const mongodbConfig = config.requireObject<MongoDBConfig>('mongodb');
 export const mailConfig = config.requireObject<MailConfig>('mail');
 
 const sharedServicesStack = new StackReference(
@@ -36,6 +38,14 @@ export const postgresqlConfig = sharedServicesStackAws.apply((output) => ({
   username: output.postgresql.username as string,
   password: output.postgresql.password as string,
 }));
+const sharedServicesStackMongoDb = sharedServicesStack.requireOutput('mongodb');
+export const mongodbClusterConfig = sharedServicesStackMongoDb.apply(
+  (output) => ({
+    clusterName: output.atlas.clusterName as string,
+    projectId: output.atlas.projectId as string,
+    endpoint: output.atlas.endpoint as string,
+  }),
+);
 
 export const globalName = 'public-services';
 export const globalShortName = 'pub-svcs';

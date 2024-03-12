@@ -148,3 +148,5 @@ jobs:
           DOPPLER_TOKEN: "${{ secrets.DOPPLER_TOKEN }}"
           GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
           PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
+          MONGODB_ATLAS_PUBLIC_KEY: "${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}"
+          MONGODB_ATLAS_PRIVATE_KEY: "${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}"

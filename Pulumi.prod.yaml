@@ -88,6 +88,9 @@ config:
       username: daemon@email.muehlbachler.io
     spfInclude: mxroute.com
     zoneId: email-muehlbachler-io
+  muehlbachler-public-services:mongodb:
+    users:
+      - librechat
   muehlbachler-public-services:network:
     externalIp:
       edge:
