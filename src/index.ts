@@ -5,7 +5,6 @@ import { createFluxResources } from './lib/flux';
 import { createCluster } from './lib/google/cluster/create';
 import { createEdgeResources } from './lib/google/edge';
 import { createNetwork } from './lib/google/network/network';
-import { createMongoDB } from './lib/mongodb';
 import { createPostgresql } from './lib/postgresql';
 import { createSimpleloginResources } from './lib/simplelogin';
 import { createDir } from './lib/util/create_dir';
@@ -19,7 +18,6 @@ export = async () => {
 
   // database
   const postgresqlUsers = createPostgresql();
-  createMongoDB();
 
   // cluster
   const cluster = createCluster(network);
