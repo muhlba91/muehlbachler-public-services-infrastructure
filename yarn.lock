@@ -480,9 +480,9 @@
     read-package-json "^2.0.13"
 
 "@pulumi/mongodbatlas@^3.14.1":
-  version "3.14.1"
-  resolved "https://registry.yarnpkg.com/@pulumi/mongodbatlas/-/mongodbatlas-3.14.1.tgz#695fc092c7ede6ff9926b934dd08786dd2a4b86c"
-  integrity sha512-K9C1t/zBVdnjAS2pDH4UFmyfRNswkGPg6YK4EdcXN/fy23bvMQWt24h3xEltP/2r7h3LpZz0yCgaSuWYblkKPQ==
+  version "3.14.2"
+  resolved "https://registry.yarnpkg.com/@pulumi/mongodbatlas/-/mongodbatlas-3.14.2.tgz#3fd857b421ae4501f5690a552dc5e6c785f5bd29"
+  integrity sha512-i2qdiCdNIclG5NYZv401itIE5cOdV7J6VVtt192/8BUbs5RHpSC77Oo8OEZ/MAlipBOaqs0+al05doFvbeE4WA==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
