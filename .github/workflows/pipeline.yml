@@ -29,17 +29,36 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - uses: hashicorp/vault-action@v3
+        id: import-secrets
+        with:
+          method: jwt
+          url: ${{ secrets.VAULT_ADDR }}
+          path: ${{ secrets.VAULT_PATH }}
+          role: ${{ secrets.VAULT_ROLE }}
+          secrets: |
+            github-muehlbachler-public-services-infrastructure/data/pulumi access_token | PULUMI_ACCESS_TOKEN ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud region | CLOUDSDK_COMPUTE_REGION ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud workload_identity_provider | GOOGLE_WORKLOAD_IDENTITY_PROVIDER ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud ci_service_account | GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT ;
+            github-muehlbachler-public-services-infrastructure/data/aws region | AWS_REGION ;
+            github-muehlbachler-public-services-infrastructure/data/aws identity_role_arn | AWS_IDENTITY_ROLE_ARN ;
+            github-muehlbachler-public-services-infrastructure/data/doppler token | DOPPLER_TOKEN ;
+            github-muehlbachler-public-services-infrastructure/data/mongodb-atlas public_key | MONGODB_ATLAS_PUBLIC_KEY ;
+            github-muehlbachler-public-services-infrastructure/data/mongodb-atlas private_key | MONGODB_ATLAS_PRIVATE_KEY ;
+            github-muehlbachler-public-services-infrastructure/data/github token | GH_PAT_TOKEN
+
       - uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
       - uses: simenandre/setup-gke-gcloud-auth-plugin@v1
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_IDENTITY_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_IDENTITY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - run: |
           npm install -g yarn
@@ -54,13 +73,7 @@ jobs:
           stack-name: prod
           refresh: true
         env:
-          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
-          AWS_REGION: "${{ secrets.AWS_REGION }}"
-          DOPPLER_TOKEN: "${{ secrets.DOPPLER_TOKEN }}"
-          GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
-          PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
-          MONGODB_ATLAS_PUBLIC_KEY: "${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}"
-          MONGODB_ATLAS_PRIVATE_KEY: "${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}"
+          GITHUB_TOKEN: "${{ env.GH_PAT_TOKEN }}"
 
   deploy:
     runs-on: ubuntu-latest
@@ -81,17 +94,36 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - uses: hashicorp/vault-action@v3
+        id: import-secrets
+        with:
+          method: jwt
+          url: ${{ secrets.VAULT_ADDR }}
+          path: ${{ secrets.VAULT_PATH }}
+          role: ${{ secrets.VAULT_ROLE }}
+          secrets: |
+            github-muehlbachler-public-services-infrastructure/data/pulumi access_token | PULUMI_ACCESS_TOKEN ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud region | CLOUDSDK_COMPUTE_REGION ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud workload_identity_provider | GOOGLE_WORKLOAD_IDENTITY_PROVIDER ;
+            github-muehlbachler-public-services-infrastructure/data/google-cloud ci_service_account | GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT ;
+            github-muehlbachler-public-services-infrastructure/data/aws region | AWS_REGION ;
+            github-muehlbachler-public-services-infrastructure/data/aws identity_role_arn | AWS_IDENTITY_ROLE_ARN ;
+            github-muehlbachler-public-services-infrastructure/data/doppler token | DOPPLER_TOKEN ;
+            github-muehlbachler-public-services-infrastructure/data/mongodb-atlas public_key | MONGODB_ATLAS_PUBLIC_KEY ;
+            github-muehlbachler-public-services-infrastructure/data/mongodb-atlas private_key | MONGODB_ATLAS_PRIVATE_KEY ;
+            github-muehlbachler-public-services-infrastructure/data/github token | GH_PAT_TOKEN
+
       - uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
       - uses: simenandre/setup-gke-gcloud-auth-plugin@v1
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_IDENTITY_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_IDENTITY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - uses: fluxcd/flux2/action@main
 
@@ -107,13 +139,7 @@ jobs:
           command: up
           stack-name: prod
         env:
-          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
-          AWS_REGION: "${{ secrets.AWS_REGION }}"
-          DOPPLER_TOKEN: "${{ secrets.DOPPLER_TOKEN }}"
-          GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
-          PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
-          MONGODB_ATLAS_PUBLIC_KEY: "${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}"
-          MONGODB_ATLAS_PRIVATE_KEY: "${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}"
+          GITHUB_TOKEN: "${{ env.GH_PAT_TOKEN }}"
 
       - run: |
           flux bootstrap github \
@@ -128,5 +154,5 @@ jobs:
             --author-name "github-actions[bot]" \
             --author-email "${{ github.action }}+github-actions[bot]@users.noreply.github.com"
         env:
-          GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
+          GITHUB_TOKEN: "${{ env.GH_PAT_TOKEN }}"
           KUBECONFIG: "outputs/admin.conf"
