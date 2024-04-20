@@ -106,3 +106,6 @@ config:
         cidr: 10.101.0.0/16
         region: europe-west4
     tier: STANDARD
+  muehlbachler-public-services:secretStores:
+    doppler: false
+    vault: true

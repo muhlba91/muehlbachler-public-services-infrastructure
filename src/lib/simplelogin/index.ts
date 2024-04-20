@@ -3,7 +3,8 @@ import { Output } from '@pulumi/pulumi';
 import { NetworkData, NetworkIPData } from '../../model/network';
 import { globalName } from '../configuration';
 import { createSimpleloginFirewalls } from '../google/network/firewall';
-import { writeToDoppler } from '../util/doppler';
+import { writeToDoppler } from '../util/doppler/secret';
+import { writeToVault } from '../util/vault/secret';
 
 import { createAWSResources } from './aws';
 import { createDKIMKey } from './dkim';
@@ -34,6 +35,12 @@ export const createSimpleloginResources = (
     'PUBLIC_SERVICES_MAIL_RELAY_POSTFIX_SERVER',
     internalIp.ipv4.address,
     `${globalName}-cluster-mail-relay`,
+  );
+
+  writeToVault(
+    'mail-relay-postfix-server',
+    internalIp.ipv4.address.apply((ip) => JSON.stringify({ ipv4: ip })),
+    `kubernetes-${globalName}-cluster`,
   );
 
   createSimpleloginFirewalls(network);

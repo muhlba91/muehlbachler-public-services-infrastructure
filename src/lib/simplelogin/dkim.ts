@@ -1,8 +1,9 @@
-import { Output } from '@pulumi/pulumi';
+import { all, Output } from '@pulumi/pulumi';
 
 import { globalName } from '../configuration';
-import { writeToDoppler } from '../util/doppler';
+import { writeToDoppler } from '../util/doppler/secret';
 import { createRSAkey } from '../util/rsa_key';
+import { writeToVault } from '../util/vault/secret';
 
 /**
  * Creates the SimpleLogin DKIM key.
@@ -21,6 +22,15 @@ export const createDKIMKey = (): Output<string> => {
     'PUBLIC_SERVICES_MAIL_RELAY_DKIM_PUBLIC_KEY',
     dkimKey.publicKeyPem,
     `${globalName}-cluster-mail-relay`,
+  );
+
+  writeToVault(
+    'mail-relay-dkim',
+    all([dkimKey.privateKeyPem, dkimKey.publicKeyPem]).apply(
+      ([privateKey, publicKey]) =>
+        JSON.stringify({ private_key: privateKey, public_key: publicKey }),
+    ),
+    `kubernetes-${globalName}-cluster`,
   );
 
   return dkimKey.publicKeyPem.apply((key) =>

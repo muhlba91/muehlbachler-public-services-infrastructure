@@ -12,6 +12,7 @@ import { GoogleConfig } from '../model/config/google';
 import { IngressConfig } from '../model/config/ingress';
 import { MailConfig } from '../model/config/mail';
 import { NetworkConfig } from '../model/config/network';
+import { SecretStoresConfig } from '../model/config/secret_stores';
 
 export const environment = getStack();
 
@@ -25,6 +26,8 @@ export const edgeInstanceConfig =
 export const ingressConfig = config.requireObject<IngressConfig>('ingress');
 export const databaseConfig = config.requireObject<DatabaseConfig>('database');
 export const mailConfig = config.requireObject<MailConfig>('mail');
+export const secretStoresConfig =
+  config.requireObject<SecretStoresConfig>('secretStores');
 
 const sharedServicesStack = new StackReference(
   `${getOrganization()}/muehlbachler-shared-services/${environment}`,
