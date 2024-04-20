@@ -1,5 +1,6 @@
 import { StringMap } from '../map';
 
+import { ClusterNodeConfig } from './cluster/node';
 import { GoogleEncryptionKeyConfig } from './google';
 
 /**
@@ -13,6 +14,9 @@ export type ClusterConfig = {
   readonly enableSecurityPosture?: boolean;
   readonly nodePools: StringMap<ClusterNodePoolConfig>;
   readonly accessConfiguration: ClusterAccessConfig;
+  // TODO: proxmox
+  readonly nodes: StringMap<ClusterNodeConfig>;
+  readonly featureGates?: readonly string[];
 };
 
 /**

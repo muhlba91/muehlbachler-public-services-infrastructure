@@ -6,15 +6,33 @@ resources:
   - gotk-sync.yaml
 patches:
   - patch: |
-      # Set Google Cloud workload identity for KMS key access
-      apiVersion: v1
-      kind: ServiceAccount
+      # Mount Google Cloud key for KMS key access
+      apiVersion: apps/v1
+      kind: Deployment
       metadata:
-        name: controller
-        annotations:
-          iam.gke.io/gcp-service-account: pub-svcs-flux-prod@public-services-402810.iam.gserviceaccount.com
+        name: kustomize-controller
+        namespace: flux-system
+      spec:
+        template:
+          spec:
+            containers:
+              - name: manager
+                env:
+                  - name: GOOGLE_APPLICATION_CREDENTIALS
+                    value: /var/gcp/credentials.json
+                volumeMounts:
+                  - name: gcp-credentials
+                    mountPath: /var/gcp/
+                    readOnly: true
+            volumes:
+              - name: gcp-credentials
+                secret:
+                  secretName: gcp-credentials
+                  items:
+                    - key: credentials.json
+                      path: credentials.json
     target:
-      kind: ServiceAccount
+      kind: Deployment
       name: kustomize-controller
   - patch: |
       # Set custom concurrency

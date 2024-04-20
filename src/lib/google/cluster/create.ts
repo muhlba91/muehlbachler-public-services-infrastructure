@@ -21,7 +21,7 @@ export const CLUSTER_NAME = `${globalName}-cluster-${environment}`;
  * @param {NetworkData} network the network
  * @returns {ClusterData} the cluster
  */
-export const createCluster = (network: NetworkData): ClusterData => {
+export const createGoogleCluster = (network: NetworkData): ClusterData => {
   const cluster = new gcp.container.Cluster(
     'gcp-cluster',
     {
@@ -121,5 +121,8 @@ export const createCluster = (network: NetworkData): ClusterData => {
         endpoint: endpoint,
       }),
     ),
+    servers: {},
+    rolesToNodes: {},
+    nodeLabels: {},
   };
 };

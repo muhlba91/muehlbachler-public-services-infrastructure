@@ -9,6 +9,8 @@ config:
       projects:
         - muehlbachler-dns
     enableSecurityPosture: true
+    featureGates:
+      - SidecarContainers
     nodePools:
       github-runners:
         diskSize: 64
@@ -29,6 +31,43 @@ config:
         maxCount: 2
         minCount: 1
         spot: true
+    nodes:
+      public-services-cluster-001:
+        cpu: 4
+        diskSize: 128
+        host: pve
+        ipv4Address: 10.100.60.1
+        ipv6Address: 2a01:4f8:121:14e2:100::60:1
+        memory:
+          max: 8192
+          min: 8192
+        roles:
+          - controller+worker
+        startupOrder: 100
+      public-services-cluster-002:
+        cpu: 4
+        diskSize: 128
+        host: pve
+        ipv4Address: 10.100.60.2
+        ipv6Address: 2a01:4f8:121:14e2:100::60:2
+        memory:
+          max: 8192
+          min: 8192
+        roles:
+          - controller+worker
+        startupOrder: 100
+      public-services-cluster-003:
+        cpu: 4
+        diskSize: 128
+        host: pve
+        ipv4Address: 10.100.60.3
+        ipv6Address: 2a01:4f8:121:14e2:100::60:3
+        memory:
+          max: 8192
+          min: 8192
+        roles:
+          - controller+worker
+        startupOrder: 100
     releaseChannel: REGULAR
     subnet: cluster
     zone: europe-west4-a
@@ -49,6 +88,12 @@ config:
       zoneId: muehlbachler-io
     sourceImage: debian-cloud/debian-12
     zone: europe-west4-a
+  muehlbachler-public-services:gcp:
+    dnsProject: muehlbachler-dns
+    encryptionKey:
+      cryptoKeyId: infrastructure-encryption
+      keyringId: infrastructure-encryption
+      location: europe
   muehlbachler-public-services:google:
     dnsProject: muehlbachler-dns
   muehlbachler-public-services:ingress:
@@ -77,6 +122,11 @@ config:
       smtp:
         exposed: true
         port: 25
+  muehlbachler-public-services:k0s:
+    apiLoadBalancer: 10.100.79.1
+    cilium:
+      enabled: true
+      version: 1.14.2
   muehlbachler-public-services:mail:
     acmeEmail: noreply@muehlbachler.xyz
     domain: email.muehlbachler.io
@@ -89,6 +139,7 @@ config:
     spfInclude: mxroute.com
     zoneId: email-muehlbachler-io
   muehlbachler-public-services:network:
+    domain: hetzner.muehlbachler.io
     externalIp:
       edge:
         ipv6: false
@@ -98,6 +149,17 @@ config:
       edge:
         ipv6: false
         subnet: edge
+    ipv4:
+      cidrMask: 16
+      enabled: true
+      gateway: 10.100.0.1
+    ipv6:
+      cidrMask: 80
+      enabled: true
+      gateway: 2a01:4f8:121:14e2:100::1
+    nameservers:
+      - 10.100.0.1
+      - 2a01:4f8:121:14e2:100::1
     subnet:
       cluster:
         cidr: 10.100.0.0/16
@@ -106,6 +168,13 @@ config:
         cidr: 10.101.0.0/16
         region: europe-west4
     tier: STANDARD
+  muehlbachler-public-services:pve:
+    cpuType: host
+    imageName: local:iso/debian-bookworm-genericcloud.img
+    localStoragePool: local
+    networkBridge: vmbr10
+    storagePool: local-zfs
   muehlbachler-public-services:secretStores:
     doppler: false
     vault: true
+  muehlbachler-public-services:username: proxmox

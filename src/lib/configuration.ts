@@ -8,10 +8,12 @@ import {
 import { ClusterConfig } from '../model/config/cluster';
 import { DatabaseConfig } from '../model/config/database';
 import { EdgeInstanceConfig } from '../model/config/edge_instance';
-import { GoogleConfig } from '../model/config/google';
+import { GCPConfig, GoogleConfig } from '../model/config/google';
 import { IngressConfig } from '../model/config/ingress';
+import { K0sConfig } from '../model/config/k0s';
 import { MailConfig } from '../model/config/mail';
 import { NetworkConfig } from '../model/config/network';
+import { ProxmoxConfig } from '../model/config/proxmox';
 import { SecretStoresConfig } from '../model/config/secret_stores';
 
 export const environment = getStack();
@@ -21,6 +23,7 @@ export const bucketId = config.require('bucketId');
 export const googleConfig = config.requireObject<GoogleConfig>('google');
 export const networkConfig = config.requireObject<NetworkConfig>('network');
 export const clusterConfig = config.requireObject<ClusterConfig>('cluster');
+export const k0sConfig = config.requireObject<K0sConfig>('k0s');
 export const edgeInstanceConfig =
   config.requireObject<EdgeInstanceConfig>('edgeInstance');
 export const ingressConfig = config.requireObject<IngressConfig>('ingress');
@@ -28,6 +31,9 @@ export const databaseConfig = config.requireObject<DatabaseConfig>('database');
 export const mailConfig = config.requireObject<MailConfig>('mail');
 export const secretStoresConfig =
   config.requireObject<SecretStoresConfig>('secretStores');
+export const username = config.require<string>('username');
+export const gcpConfig = config.requireObject<GCPConfig>('gcp');
+export const pveConfig = config.requireObject<ProxmoxConfig>('pve');
 
 const sharedServicesStack = new StackReference(
   `${getOrganization()}/muehlbachler-shared-services/${environment}`,

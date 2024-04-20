@@ -17,12 +17,15 @@ export const createServiceAccount = (
   {
     roles,
     pulumiOptions,
+    serviceAccountName, // FIXME: remove
   }: {
     readonly roles?: readonly string[];
     readonly pulumiOptions?: CustomResourceOptions;
+    readonly serviceAccountName?: string; // FIXME: remove
   },
 ): gcp.serviceaccount.Account => {
-  const accountName = `${globalShortName}-${name}-${environment}`;
+  const accountName =
+    serviceAccountName ?? `${globalShortName}-${name}-${environment}`;
 
   const serviceAccount = new gcp.serviceaccount.Account(
     `gcp-sa-${accountName}`,

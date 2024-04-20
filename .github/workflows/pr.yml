@@ -136,7 +136,13 @@ jobs:
             github-muehlbachler-public-services-infrastructure/data/doppler token | DOPPLER_TOKEN ;
             github-muehlbachler-public-services-infrastructure/data/mongodb-atlas public_key | MONGODB_ATLAS_PUBLIC_KEY ;
             github-muehlbachler-public-services-infrastructure/data/mongodb-atlas private_key | MONGODB_ATLAS_PRIVATE_KEY ;
-            github-muehlbachler-public-services-infrastructure/data/github token | GH_PAT_TOKEN
+            github-muehlbachler-public-services-infrastructure/data/github token | GH_PAT_TOKEN ;
+            github-muehlbachler-public-services-infrastructure/data/tailscale oauth_client_id | TS_OAUTH_CLIENT_ID ;
+            github-muehlbachler-public-services-infrastructure/data/tailscale oauth_secret | TS_OAUTH_SECRET ;
+            github-muehlbachler-public-services-infrastructure/data/proxmox username | PROXMOX_VE_USERNAME ;
+            github-muehlbachler-public-services-infrastructure/data/proxmox password | PROXMOX_VE_PASSWORD ;
+            github-muehlbachler-public-services-infrastructure/data/proxmox endpoint | PROXMOX_VE_ENDPOINT ;
+            github-muehlbachler-public-services-infrastructure/data/proxmox insecure | PROXMOX_VE_INSECURE
 
       - uses: google-github-actions/auth@v2
         with:
@@ -156,6 +162,12 @@ jobs:
       - run: |
           yarn install
           yarn build
+
+      - uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ env.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ env.TS_OAUTH_SECRET }}
+          tags: tag:github-actions
 
       - uses: pulumi/actions@v5
         with:

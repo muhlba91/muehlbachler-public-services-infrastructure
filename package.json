@@ -28,8 +28,11 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@muhlba91/pulumi-proxmoxve": "^6.4.0",
     "@pulumi/aws": "^6.7.0",
+    "@pulumi/command": "^0.10.0",
     "@pulumi/gcp": "^7.0.0",
+    "@pulumi/kubernetes": "^4.11.0",
     "@pulumi/mongodbatlas": "^3.14.1",
     "@pulumi/postgresql": "^3.10.0",
     "@pulumi/pulumi": "^3.69.0",
@@ -38,7 +41,9 @@
     "@pulumi/vault": "^6.1.0",
     "@pulumiverse/doppler": "^0.0.10",
     "bcryptjs": "^2.4.3",
-    "nunjucks": "^3.2.4"
+    "crypto": "^1.0.1",
+    "nunjucks": "^3.2.4",
+    "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

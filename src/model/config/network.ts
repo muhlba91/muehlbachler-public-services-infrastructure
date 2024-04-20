@@ -8,6 +8,11 @@ export type NetworkConfig = {
   readonly externalIp: StringMap<ExternalIpConfig>;
   readonly internalIp: StringMap<InternalIpConfig>;
   readonly tier: string;
+  // TODO: proxmox
+  readonly nameservers: readonly string[];
+  readonly domain: string;
+  readonly ipv4: NetworkIPConfig;
+  readonly ipv6: NetworkIPConfig;
 };
 
 /**
@@ -33,4 +38,14 @@ export type ExternalIpConfig = {
 export type InternalIpConfig = {
   readonly subnet: string;
   readonly ipv6?: boolean;
+};
+
+// TODO: proxmox
+/**
+ * Defines IPv network configuration.
+ */
+export type NetworkIPConfig = {
+  readonly enabled: boolean;
+  readonly cidrMask: string;
+  readonly gateway: string;
 };
