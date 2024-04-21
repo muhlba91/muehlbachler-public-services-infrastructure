@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# restart postfix
+systemctl restart postfix || true
+
+# upload new certificate data
+gcloud storage cp -r /var/acme/config/ gs://{{ bucket.id }}/{{ bucket.path }}/acme/config/ || true
+gcloud storage cp -r /ssl/ gs://{{ bucket.id }}/{{ bucket.path }}/acme/ssl/ || true

@@ -6,6 +6,8 @@ import { createRecord } from '../google/dns/record';
 
 export const MAILSERVER_DOMAIN = `relay.${mailConfig.domain}`;
 
+// FIXME: simplelogin dns records
+
 /**
  * Creates the base DNS records.
  *

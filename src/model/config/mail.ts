@@ -1,3 +1,5 @@
+import { ServerConfig } from './server';
+
 /**
  * Defines mail configuration.
  */
@@ -7,6 +9,8 @@ export type MailConfig = {
   readonly spfInclude: string;
   readonly acmeEmail: string;
   readonly relay: MailRelayConfig;
+  readonly handler: string;
+  readonly server: ServerConfig;
 };
 
 /**

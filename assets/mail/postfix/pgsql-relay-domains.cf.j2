@@ -1,0 +1,8 @@
+# attention: https://github.com/simple-login/app/issues/1803
+
+hosts = {{ database.host }}:{{ database.port }}
+user = {{ database.user }}
+password = {{ database.password }}
+dbname = {{ database.database }}
+
+query = SELECT domain FROM custom_domain WHERE domain='%s' AND verified=true UNION SELECT domain FROM public_domain WHERE domain='%s' UNION SELECT '%s' WHERE '%s' LIKE '%%.{{ baseDomain }}' LIMIT 1;

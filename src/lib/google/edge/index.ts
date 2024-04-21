@@ -13,7 +13,7 @@ import { createPostfixResources } from './postfix';
  * @param {NetworkData} network the network
  * @param {StringMap<PostgresqlUserData>} postgresqlUsers a map containing users and their passwords
  */
-export const createEdgeResources = (
+export const createGoogleEdgeResources = (
   network: NetworkData,
   postgresqlUsers: StringMap<PostgresqlUserData>,
 ) => {

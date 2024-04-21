@@ -1,0 +1,93 @@
+#cloud-config
+bootcmd:
+  - [cloud-init-per, once, mkdir, -p, /opt/edge/]
+package_update: true
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - wget
+  - curl
+  - git
+  - vim
+  - apt-transport-https
+  - dirmngr
+  - htop
+  - btop
+  - tmux
+  - ca-certificates
+  - gnupg
+  - lsb-release
+  - jq
+  - unzip
+  - postfix
+  - postfix-pgsql
+  - postfix-pcre
+  - libsasl2-modules
+  - postgresql-client
+write_files:
+  - path: /etc/cron.d/acme
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ acme.cron | indent(6) }}
+  - path: /usr/bin/reload-acme-cert
+    owner: root:root
+    permissions: '0744'
+    content: |
+      {{ acme.reload | indent(6) }}
+  - path: /opt/edge/configure-acme.sh
+    owner: root:root
+    permissions: '0744'
+    content: |
+      {{ acme.configure | indent(6) }}
+  - path: /opt/edge/credentials.json
+    owner: root:root
+    permissions: '0600'
+    content: |
+      {{ credentials | indent(6) }}
+  - path: /etc/postfix/body_checks.pcre
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.bodyChecks | indent(6) }}
+  - path: /etc/postfix/client_headers.pcre
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.clientHeaders | indent(6) }}
+  - path: /etc/postfix/main.cf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.main | indent(6) }}
+  - path: /etc/postfix/master.cf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.master | indent(6) }}
+  - path: /etc/postfix/pgsql-relay-domains.cf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.pgsqlRelayDomains | indent(6) }}
+  - path: /etc/postfix/pgsql-transport-maps.cf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.pgsqlTransportMaps | indent(6) }}
+  - path: /etc/postfix/sasl_passwd
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {{ postfix.saslPasswd | indent(6) }}
+runcmd:
+  - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+  - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  - apt-get update
+  - apt-get install --yes google-cloud-cli
+  - gcloud auth login --cred-file=/opt/edge/credentials.json
+  - /opt/edge/configure-acme.sh
+  - postmap hash:/etc/postfix/sasl_passwd
+  - systemctl enable qemu-guest-agent
+  - systemctl enable postfix
+  - reboot

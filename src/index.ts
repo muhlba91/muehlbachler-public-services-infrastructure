@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { setTimeout } from 'timers/promises';
 
 import * as kubernetes from '@pulumi/kubernetes';
-import { all } from '@pulumi/pulumi';
+import { all, Output } from '@pulumi/pulumi';
 import { parse } from 'yaml';
 
 import {
@@ -26,8 +26,9 @@ import {
 } from './lib/external_dns';
 import { createFluxResources, createGoogleFluxResources } from './lib/flux';
 import { createGoogleCluster } from './lib/google/cluster/create';
-import { createEdgeResources } from './lib/google/edge';
+import { createGoogleEdgeResources } from './lib/google/edge';
 import { createNetwork } from './lib/google/network/network';
+import { createMailResources } from './lib/mail';
 import { createPostgresql } from './lib/postgresql';
 import { createSimpleloginResources } from './lib/simplelogin';
 import { createDir } from './lib/util/create_dir';
@@ -52,9 +53,9 @@ export = async () => {
   writeFilePulumiAndUploadToS3('admin-gke.conf', cluster.kubeconfig, {});
 
   // cluster resources
-  const externalDnsServiceAccount = createGoogleExternalDNSResources();
-  const certManagerServiceAccount = createGoogleCertManagerResources();
-  const fluxServiceAccount = createGoogleFluxResources();
+  createGoogleExternalDNSResources();
+  createGoogleCertManagerResources();
+  createGoogleFluxResources();
 
   // simplelogin resources
   const dkimPublicKey = createSimpleloginResources(
@@ -64,12 +65,20 @@ export = async () => {
   );
 
   // edge instance
-  createEdgeResources(network, postgresqlUsers);
+  createGoogleEdgeResources(network, postgresqlUsers);
 
   // TODO: proxmox
   // Servers
   const userPassword = createRandomPassword('server', { special: false });
   const sshKey = createSSHKey('public-services', {});
+  all([userPassword.password, sshKey.publicKeyOpenssh]).apply(
+    ([userPasswordPlain, sshPublicKey]) =>
+      createMailResources(
+        userPasswordPlain,
+        sshPublicKey.trim(),
+        postgresqlUsers,
+      ),
+  );
   const clusterData = all([
     userPassword.password,
     sshKey.publicKeyOpenssh,
@@ -85,7 +94,7 @@ export = async () => {
   writeFilePulumiAndUploadToS3('ssh.key', sshKey.privateKeyPem, {
     permissions: '0600',
   });
-  writeFilePulumiAndUploadToS3(
+  const k0sctl = writeFilePulumiAndUploadToS3(
     'k0sctl.yml',
     all([
       clusterData.servers,
@@ -111,17 +120,20 @@ export = async () => {
   createCertManagerResources();
 
   // k0sctl cluster creation
-  // eslint-disable-next-line functional/no-loop-statements
-  while (!fs.existsSync('./outputs/k0sctl.yml')) {
-    await setTimeout(1000);
-  }
-  const k0sVersion = parse(readFileContents('./outputs/k0sctl.yml'))['spec'][
-    'k0s'
-  ]['version'];
-  const kubeConfig = clusterData.servers.apply((servers) =>
-    createCluster(k0sVersion, Object.values(servers), {}),
-  );
-  clusterData.servers.apply((servers) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const kubeConfig = k0sctl.apply(async (_) => {
+    // eslint-disable-next-line functional/no-loop-statements
+    while (!fs.existsSync('./outputs/k0sctl.yml')) {
+      await setTimeout(1000);
+    }
+    const k0sVersion = parse(readFileContents('./outputs/k0sctl.yml'))['spec'][
+      'k0s'
+    ]['version'];
+    return clusterData.servers.apply((servers) =>
+      createCluster(k0sVersion, Object.values(servers), {}),
+    );
+  }) as unknown as Output<string>;
+  all([clusterData.servers]).apply(([servers]) => {
     const kubernetesProvider = new kubernetes.Provider(
       `${globalName}-cluster`,
       {
@@ -137,31 +149,16 @@ export = async () => {
 
     createFluxResources(kubernetesProvider);
   });
-  writeFilePulumiAndUploadToS3('admin.conf', kubeConfig, {});
+  writeFilePulumiAndUploadToS3(
+    'admin.conf',
+    kubeConfig as unknown as Output<string>,
+    {},
+  );
 
   return {
     cluster: {
       configuration: {
-        endpoint: cluster.resource?.endpoint,
-        certificateAuthority: cluster.resource?.masterAuth.clusterCaCertificate,
-        kubeconfig: cluster.kubeconfig,
-      },
-      fluxcd: {
-        serviceAccount: fluxServiceAccount.email,
-      },
-      certManager: {
-        serviceAccount: certManagerServiceAccount.email,
-      },
-      externalDns: {
-        serviceAccount: externalDnsServiceAccount.email,
-      },
-    },
-    edge: {
-      ip: {
-        ipv4: network.externalIPs[edgeInstanceConfig.network.externalIp].ipv4
-          .address,
-        ipv6: network.externalIPs[edgeInstanceConfig.network.externalIp].ipv6
-          ?.address,
+        kubeconfig: kubeConfig,
       },
     },
     mail: {

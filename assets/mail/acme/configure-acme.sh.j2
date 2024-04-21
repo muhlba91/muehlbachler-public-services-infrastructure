@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export GOOGLE_APPLICATION_CREDENTIALS=/opt/edge/credentials.json
+export CLOUDSDK_CORE_PROJECT={{ acme.project }} 
+
+mkdir /ssl || true
+
+curl https://get.acme.sh | sh -s email={{ acme.email }} \
+      --home /var/acme/home \
+      --config-home /var/acme/config \
+      --no-cron
+/var/acme/home/acme.sh \
+      --upgrade \
+      --auto-upgrade \
+      --home /var/acme/home \
+      --config-home /var/acme/config \
+      --no-cron
+
+gcloud storage cp -r gs://{{ bucket.id }}/{{ bucket.path }}/acme/config/ /var/acme/ || true
+gcloud storage cp -r gs://{{ bucket.id }}/{{ bucket.path }}/acme/ssl/ / || true
+
+/var/acme/home/acme.sh \
+      --issue \
+      --dns dns_gcloud \
+      -d {{ acme.domain }} \
+      -d *.{{ acme.domain }} \
+      --home /var/acme/home \
+      --config-home /var/acme/config \
+      --no-cron
+/var/acme/home/acme.sh \
+      --install-cert \
+      -d {{ acme.domain }} \
+      --cert-file /ssl/cert.pem  \
+      --key-file /ssl/key.pem  \
+      --fullchain-file /ssl/fullchain.pem \
+      --reloadcmd "/usr/bin/reload-acme-cert" \
+      --home /var/acme/home \
+      --config-home /var/acme/config \
+      --no-cron

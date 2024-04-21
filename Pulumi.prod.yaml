@@ -86,6 +86,16 @@ config:
       ptrRecords: true
       subnet: edge
       zoneId: muehlbachler-io
+    server:
+      cpu: 1
+      diskSize: 8
+      host: pve
+      ipv4Address: 10.100.61.1
+      ipv6Address: 2a01:4f8:121:14e2:100::61:1
+      memory:
+        max: 1024
+        min: 1024
+      startupOrder: 100
     sourceImage: debian-cloud/debian-12
     zone: europe-west4-a
   muehlbachler-public-services:gcp:
@@ -130,16 +140,30 @@ config:
   muehlbachler-public-services:mail:
     acmeEmail: noreply@muehlbachler.xyz
     domain: email.muehlbachler.io
+    handler: 10.100.73.1
     relay:
       host: mail.email.muehlbachler.io
       password:
         secure: AAABADVxL1RJyz1yZxJo7JKvv/GVoXPs3nFSohYX/Zwsxs7wSjmpCDVOLvLxqz42xJ50dzJMJH4=
       port: 587
       username: daemon@email.muehlbachler.io
+    server:
+      cpu: 1
+      diskSize: 8
+      host: pve
+      ipv4Address: 10.100.61.1
+      ipv6Address: 2a01:4f8:121:14e2:100::61:1
+      memory:
+        max: 1024
+        min: 1024
+      startupOrder: 100
     spfInclude: mxroute.com
     zoneId: email-muehlbachler-io
   muehlbachler-public-services:network:
     domain: hetzner.muehlbachler.io
+    externalDomain:
+      domain: muehlbachler.io
+      zoneId: muehlbachler-io
     externalIp:
       edge:
         ipv6: false
@@ -152,10 +176,12 @@ config:
     ipv4:
       cidrMask: 16
       enabled: true
+      external: 178.63.69.250
       gateway: 10.100.0.1
     ipv6:
       cidrMask: 80
       enabled: true
+      external: 2a01:4f8:121:14e2:100::61:1
       gateway: 2a01:4f8:121:14e2:100::1
     nameservers:
       - 10.100.0.1

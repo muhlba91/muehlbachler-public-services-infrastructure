@@ -11,6 +11,7 @@ export type NetworkConfig = {
   // TODO: proxmox
   readonly nameservers: readonly string[];
   readonly domain: string;
+  readonly externalDomain: NetworkExternalDomainConfig;
   readonly ipv4: NetworkIPConfig;
   readonly ipv6: NetworkIPConfig;
 };
@@ -48,4 +49,13 @@ export type NetworkIPConfig = {
   readonly enabled: boolean;
   readonly cidrMask: string;
   readonly gateway: string;
+  readonly external: string;
+};
+
+/**
+ * Defines external domain configuration.
+ */
+export type NetworkExternalDomainConfig = {
+  readonly domain: string;
+  readonly zoneId: string;
 };

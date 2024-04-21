@@ -4,9 +4,6 @@ package_upgrade: true
 packages:
   - qemu-guest-agent
   - lvm2
-  - open-iscsi
-  - nfs-common
-  - dirmngr
   - wget
   - curl
   - git
@@ -56,7 +53,7 @@ write_files:
       fs.inotify.max_user_watches=524288
 runcmd:
   - sysctl -p
-  - systemctl enable --now qemu-guest-agent
+  - systemctl enable qemu-guest-agent
   - systemctl enable multipath-tools
   - systemctl enable iscsid
   - reboot

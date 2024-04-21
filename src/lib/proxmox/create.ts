@@ -1,17 +1,14 @@
-import { createHash } from 'crypto';
-
 import * as proxmox from '@muhlba91/pulumi-proxmoxve';
+import { interpolate, Output } from '@pulumi/pulumi';
 
 import { ServerConfig } from '../../model/config/server';
 import { ServerData } from '../../model/server';
 import {
   environment,
-  globalName,
   networkConfig,
   pveConfig,
   username,
 } from '../configuration';
-import { readFileContents } from '../util/file';
 
 // FIXME: https://github.com/muhlba91/pulumi-proxmoxve/issues/2
 const provider = new proxmox.Provider('proxmoxve', {
@@ -29,6 +26,9 @@ const provider = new proxmox.Provider('proxmoxve', {
  * @param {string} userPassword the user's password
  * @param {string} sshPublicKey the SSH public key (OpenSSH)
  * @param {ServerConfig} server the data for the server
+ * @param {Output<string>} vendorConfigData the vendor configuration data
+ * @param {Output<string>} vendorConfigDataHash the hash of the vendor configuration data
+ * @param {string[]} extraTags the extra tags
  * @returns {ServerData} the generated server
  */
 export const createServer = (
@@ -37,11 +37,10 @@ export const createServer = (
   userPassword: string,
   sshPublicKey: string,
   server: ServerConfig,
+  vendorConfigData: Output<string>,
+  vendorConfigDataHash: Output<string>,
+  extraTags: string[],
 ): ServerData => {
-  const vendorConfigData = readFileContents('assets/vendor-config.yml');
-  const vendorConfigHash = createHash('sha256')
-    .update(vendorConfigData)
-    .digest('hex');
   const vendorConfig = new proxmox.storage.File(
     `vendor-config-${prefix}-${hostname}-${environment}`,
     {
@@ -50,7 +49,7 @@ export const createServer = (
       nodeName: server.host,
       sourceRaw: {
         data: vendorConfigData,
-        fileName: `vendor-config-${prefix}-${hostname}-${environment}-${vendorConfigHash}.yml`,
+        fileName: interpolate`vendor-config-${prefix}-${hostname}-${environment}-${vendorConfigDataHash}.yml`,
       },
     },
     {
@@ -143,7 +142,7 @@ export const createServer = (
         },
       },
       started: true,
-      tags: [`${globalName}-cluster`, environment].sort(),
+      tags: [...extraTags, environment].sort(),
     },
     {
       provider: provider,

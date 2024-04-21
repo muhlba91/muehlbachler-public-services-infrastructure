@@ -131,7 +131,7 @@ export const createPostfixResources = (
     writeFilePulumiAndUploadToS3(
       'cron',
       Output.create(
-        renderTemplate('./assets/edge/acme/cron.j2', {
+        renderTemplate('./assets/edge/acme/cron-gke.j2', {
           project: googleConfig.dnsProject,
         }),
       ),
