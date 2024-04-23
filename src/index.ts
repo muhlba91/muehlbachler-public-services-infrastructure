@@ -5,29 +5,19 @@ import * as kubernetes from '@pulumi/kubernetes';
 import { all, Output } from '@pulumi/pulumi';
 import { parse } from 'yaml';
 
-import {
-  createCertManagerResources,
-  createGoogleCertManagerResources,
-} from './lib/cert_manager';
+import { createCertManagerResources } from './lib/cert_manager';
 import { deployCilium } from './lib/cilium';
 import { createClusterResources } from './lib/cluster';
 import { createCluster } from './lib/cluster/k0sctl';
 import {
   clusterConfig,
-  edgeInstanceConfig,
   environment,
   globalName,
   k0sConfig,
   username,
 } from './lib/configuration';
-import {
-  createExternalDNSResources,
-  createGoogleExternalDNSResources,
-} from './lib/external_dns';
-import { createFluxResources, createGoogleFluxResources } from './lib/flux';
-import { createGoogleCluster } from './lib/google/cluster/create';
-import { createGoogleEdgeResources } from './lib/google/edge';
-import { createNetwork } from './lib/google/network/network';
+import { createExternalDNSResources } from './lib/external_dns';
+import { createFluxResources } from './lib/flux';
 import { createMailResources } from './lib/mail';
 import { createPostgresql } from './lib/postgresql';
 import { createSimpleloginResources } from './lib/simplelogin';
@@ -42,35 +32,21 @@ import { renderTemplate } from './lib/util/template';
 export = async () => {
   createDir('outputs');
 
-  // network
-  const network = createNetwork();
+  // server authentication
+  const userPassword = createRandomPassword('server', { special: false });
+  const sshKey = createSSHKey('public-services', {});
 
   // database
   const postgresqlUsers = createPostgresql();
 
-  // cluster
-  const cluster = createGoogleCluster(network);
-  writeFilePulumiAndUploadToS3('admin-gke.conf', cluster.kubeconfig, {});
-
-  // cluster resources
-  createGoogleExternalDNSResources();
-  createGoogleCertManagerResources();
-  createGoogleFluxResources();
-
   // simplelogin resources
-  const dkimPublicKey = createSimpleloginResources(
-    network.externalIPs[edgeInstanceConfig.network.externalIp],
-    network.internalIPs[edgeInstanceConfig.network.internalIp],
-    network,
-  );
+  const dkimPublicKey = createSimpleloginResources();
 
-  // edge instance
-  createGoogleEdgeResources(network, postgresqlUsers);
+  // // Kubernetes cloud resources
+  createExternalDNSResources();
+  createCertManagerResources();
 
-  // TODO: proxmox
-  // Servers
-  const userPassword = createRandomPassword('server', { special: false });
-  const sshKey = createSSHKey('public-services', {});
+  // mail server
   all([userPassword.password, sshKey.publicKeyOpenssh]).apply(
     ([userPasswordPlain, sshPublicKey]) =>
       createMailResources(
@@ -79,6 +55,8 @@ export = async () => {
         postgresqlUsers,
       ),
   );
+
+  // cluster servers
   const clusterData = all([
     userPassword.password,
     sshKey.publicKeyOpenssh,
@@ -90,7 +68,7 @@ export = async () => {
     ),
   );
 
-  // Write output files for the cluster
+  // write output files for the cluster
   writeFilePulumiAndUploadToS3('ssh.key', sshKey.privateKeyPem, {
     permissions: '0600',
   });
@@ -114,10 +92,6 @@ export = async () => {
     ),
     {},
   );
-
-  // // Kubernetes cloud resources
-  createExternalDNSResources();
-  createCertManagerResources();
 
   // k0sctl cluster creation
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

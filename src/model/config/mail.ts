@@ -10,6 +10,7 @@ export type MailConfig = {
   readonly acmeEmail: string;
   readonly relay: MailRelayConfig;
   readonly handler: string;
+  readonly publicIPv4Address: string;
   readonly server: ServerConfig;
 };
 

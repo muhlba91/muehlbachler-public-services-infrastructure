@@ -1,40 +1,46 @@
 import { interpolate, Output } from '@pulumi/pulumi';
 
-import { NetworkIPData } from '../../model/network';
-import { mailConfig } from '../configuration';
+import { mailConfig, networkConfig } from '../configuration';
 import { createRecord } from '../google/dns/record';
 
 export const MAILSERVER_DOMAIN = `relay.${mailConfig.domain}`;
 
-// FIXME: simplelogin dns records
-
 /**
  * Creates the base DNS records.
  *
- * @param {NetworkIPData} externalIp the external IP of the mail server
  * @param {Output<string>} dkimPublicKey the public DKIM key
  */
-export const createDNSRecords = (
-  externalIp: NetworkIPData,
-  dkimPublicKey: Output<string>,
-) => {
+export const createDNSRecords = (dkimPublicKey: Output<string>) => {
   // server A/AAAA records
   createRecord(
     MAILSERVER_DOMAIN,
     mailConfig.zoneId,
     'A',
-    [externalIp.ipv4.address],
+    [mailConfig.publicIPv4Address],
     {},
   );
-  if (externalIp.ipv6 != undefined) {
-    createRecord(
-      MAILSERVER_DOMAIN,
-      mailConfig.zoneId,
-      'AAAA',
-      [externalIp.ipv6?.address ?? Output.create('')],
-      {},
-    );
-  }
+  createRecord(
+    MAILSERVER_DOMAIN,
+    mailConfig.zoneId,
+    'AAAA',
+    [Output.create(mailConfig.server.ipv6Address)],
+    {},
+  );
+  // needed for reverse lookup
+  createRecord(
+    networkConfig.domain,
+    networkConfig.externalDomain.zoneId,
+    'A',
+    [mailConfig.publicIPv4Address],
+    {},
+  );
+  createRecord(
+    networkConfig.domain,
+    networkConfig.externalDomain.zoneId,
+    'AAAA',
+    [Output.create(mailConfig.server.ipv6Address)],
+    {},
+  );
 
   createRecord(
     `dkim._domainkey.${mailConfig.domain}`,

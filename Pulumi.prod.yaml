@@ -1,36 +1,8 @@
 config:
   muehlbachler-public-services:bucketId: infrastructure-assets-87d6dbd4-4928-4cdc-8d9d-2b19417489d9
   muehlbachler-public-services:cluster:
-    accessConfiguration:
-      encryptionKey:
-        cryptoKeyId: infrastructure-encryption
-        keyringId: infrastructure-encryption
-        location: europe
-      projects:
-        - muehlbachler-dns
-    enableSecurityPosture: true
     featureGates:
       - SidecarContainers
-    nodePools:
-      github-runners:
-        diskSize: 64
-        enabled: false
-        initialNodeCount: 0
-        machineType: t2d-standard-2
-        maxCount: 2
-        minCount: 0
-        spot: true
-        taints:
-          - effect: NO_SCHEDULE
-            key: reserved
-            value: github-runners
-      workloads:
-        diskSize: 48
-        initialNodeCount: 1
-        machineType: t2d-standard-1
-        maxCount: 2
-        minCount: 1
-        spot: true
     nodes:
       public-services-cluster-001:
         cpu: 4
@@ -68,70 +40,17 @@ config:
         roles:
           - controller+worker
         startupOrder: 100
-    releaseChannel: REGULAR
-    subnet: cluster
-    zone: europe-west4-a
   muehlbachler-public-services:database:
     database:
       simplelogin: simplelogin
     users:
       - simplelogin
-  muehlbachler-public-services:edgeInstance:
-    diskSize: 10
-    hostname: edge.muehlbachler.io
-    machineType: e2-micro
-    network:
-      externalIp: edge
-      internalIp: edge
-      ptrRecords: true
-      subnet: edge
-      zoneId: muehlbachler-io
-    server:
-      cpu: 1
-      diskSize: 8
-      host: pve
-      ipv4Address: 10.100.61.1
-      ipv6Address: 2a01:4f8:121:14e2:100::61:1
-      memory:
-        max: 1024
-        min: 1024
-      startupOrder: 100
-    sourceImage: debian-cloud/debian-12
-    zone: europe-west4-a
   muehlbachler-public-services:gcp:
     dnsProject: muehlbachler-dns
     encryptionKey:
       cryptoKeyId: infrastructure-encryption
       keyringId: infrastructure-encryption
       location: europe
-  muehlbachler-public-services:google:
-    dnsProject: muehlbachler-dns
-  muehlbachler-public-services:ingress:
-    service:
-      http:
-        port: 80
-        target:
-          port: 8000
-          service: traefik.traefik
-      https:
-        port: 443
-        target:
-          port: 8443
-          service: traefik.traefik
-      ldaps:
-        port: 636
-        target:
-          port: 8636
-          service: traefik.traefik
-      simplelogin:
-        exposed: false
-        port: 20381
-        target:
-          port: 20381
-          service: simplelogin-handler.simplelogin
-      smtp:
-        exposed: true
-        port: 25
   muehlbachler-public-services:k0s:
     apiLoadBalancer: 10.100.79.1
     cilium:
@@ -141,6 +60,7 @@ config:
     acmeEmail: noreply@muehlbachler.xyz
     domain: email.muehlbachler.io
     handler: 10.100.73.1
+    publicIPv4Address: 178.63.69.250
     relay:
       host: mail.email.muehlbachler.io
       password:
@@ -164,15 +84,6 @@ config:
     externalDomain:
       domain: muehlbachler.io
       zoneId: muehlbachler-io
-    externalIp:
-      edge:
-        ipv6: false
-        subnet: edge
-        tier: STANDARD
-    internalIp:
-      edge:
-        ipv6: false
-        subnet: edge
     ipv4:
       cidrMask: 16
       enabled: true
@@ -186,14 +97,6 @@ config:
     nameservers:
       - 10.100.0.1
       - 2a01:4f8:121:14e2:100::1
-    subnet:
-      cluster:
-        cidr: 10.100.0.0/16
-        region: europe-west4
-      edge:
-        cidr: 10.101.0.0/16
-        region: europe-west4
-    tier: STANDARD
   muehlbachler-public-services:pve:
     cpuType: host
     imageName: local:iso/debian-bookworm-genericcloud.img

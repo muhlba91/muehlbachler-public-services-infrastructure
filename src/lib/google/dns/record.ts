@@ -1,7 +1,7 @@
 import * as gcp from '@pulumi/gcp';
 import { Output } from '@pulumi/pulumi';
 
-import { googleConfig } from '../../configuration';
+import { gcpConfig } from '../../configuration';
 import { sanitizeText } from '../../util/string';
 
 export const defaultTtl = 300;
@@ -35,7 +35,7 @@ export const createRecord = (
       type: type,
       rrdatas: records.map((val) => val),
       ttl: ttl,
-      project: googleConfig.dnsProject,
+      project: gcpConfig.dnsProject,
     },
     {},
   );

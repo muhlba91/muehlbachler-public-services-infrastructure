@@ -1,5 +1,3 @@
-import { Output } from '@pulumi/pulumi';
-
 import { ClusterData } from '../../model/cluster';
 import { ClusterConfig } from '../../model/config/cluster/cluster';
 import { StringMap } from '../../model/map';
@@ -25,9 +23,6 @@ export const createClusterResources = (
     servers: servers,
     rolesToNodes: createRolesToNodes(clusterConfig),
     nodeLabels: createNodeLabels(clusterConfig),
-    // TODO: proxmox
-    resource: undefined,
-    kubeconfig: Output.create(''),
   };
 };
 
