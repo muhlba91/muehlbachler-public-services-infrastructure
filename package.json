@@ -31,7 +31,7 @@
     "@muhlba91/pulumi-proxmoxve": "^6.4.0",
     "@pulumi/aws": "^6.7.0",
     "@pulumi/command": "^1.0.0",
-    "@pulumi/gcp": "^7.0.0",
+    "@pulumi/gcp": "^8.0.0",
     "@pulumi/kubernetes": "^4.11.0",
     "@pulumi/postgresql": "^3.10.0",
     "@pulumi/pulumi": "^3.69.0",
