@@ -81,7 +81,7 @@ jobs:
           oauth-secret: ${{ env.TS_OAUTH_SECRET }}
           tags: tag:github-actions
 
-      - uses: pulumi/actions@v5
+      - uses: pulumi/actions@v6
         with:
           command: preview
           stack-name: prod
@@ -170,7 +170,7 @@ jobs:
           oauth-secret: ${{ env.TS_OAUTH_SECRET }}
           tags: tag:github-actions
 
-      - uses: pulumi/actions@v5
+      - uses: pulumi/actions@v6
         with:
           command: up
           stack-name: prod
