@@ -2,6 +2,7 @@
 
 [![Build status](https://img.shields.io/github/actions/workflow/status/muhlba91/muehlbachler-public-services-infrastructure/pipeline.yml?style=for-the-badge)](https://github.com/muhlba91/muehlbachler-public-services-infrastructure/actions/workflows/pipeline.yml)
 [![License](https://img.shields.io/github/license/muhlba91/muehlbachler-public-services-infrastructure?style=for-the-badge)](LICENSE.md)
+[![](https://api.scorecard.dev/projects/github.com/muhlba91/muehlbachler-public-services-infrastructure/badge?style=for-the-badge)](https://scorecard.dev/viewer/?uri=github.com/muhlba91/muehlbachler-public-services-infrastructure)
 
 This repository contains the infrastructure as code (IaC) for personal public services using [Pulumi](http://pulumi.com).
 
