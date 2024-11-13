@@ -65,6 +65,7 @@ spec:
                   virtualRouterID: 52
               virtualServers:
                 - ipAddress: {{ virtualIp.ipv4.address }}
+                  lbAlgo: sh
           kubeProxy:
             disabled: true
             mode: ipvs
