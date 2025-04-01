@@ -142,6 +142,7 @@ export const createServer = (
         },
       },
       started: true,
+      rebootAfterUpdate: true,
       tags: [...extraTags, environment].sort(),
     },
     {
