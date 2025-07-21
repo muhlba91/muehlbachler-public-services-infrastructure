@@ -8,43 +8,28 @@
     ],
     "prHourlyLimit": 0,
     "prConcurrentLimit": 0,
-    "baseBranches": [
-        "main"
-    ],
-    "enabledManagers": [
-        "github-actions",
-        "pre-commit",
-        "npm",
-        "regex"
-    ],
+    "baseBranches": ["main"],
+    "enabledManagers": ["github-actions", "pre-commit", "npm", "custom.regex"],
     "github-actions": {
-        "fileMatch": [
-            "^(workflow-templates|\\.github/workflows)/[^/]+\\.ya?ml$",
-            "(^|/)action\\.ya?ml$"
+        "managerFilePatterns": [
+            "/^(workflow-templates|\\.github/workflows)/[^/]+\\.ya?ml$/",
+            "/(^|/)action\\.ya?ml$/"
         ]
     },
     "pre-commit": {
         "enabled": true,
-        "fileMatch": [
-            "(^|/)\\.pre-commit-config\\.ya?ml$"
-        ]
+        "managerFilePatterns": ["/(^|/)\\.pre-commit-config\\.ya?ml$/"]
     },
     "npm": {
-        "fileMatch": [
-            "(^|/)package\\.json$"
-        ],
+        "managerFilePatterns": ["/(^|/)package\\.json$/"],
         "rollbackPrs": true,
         "versioning": "npm"
     },
     "customManagers": [
         {
             "customType": "regex",
-            "fileMatch": [
-                "(^|/)k0sctl\\.yml\\.j2$"
-            ],
-            "matchStrings": [
-                "\\s+version:\\s+(?<currentValue>\\S+)"
-            ],
+            "managerFilePatterns": ["/(^|/)k0sctl\\.yml\\.j2$/"],
+            "matchStrings": ["\\s+version:\\s+(?<currentValue>\\S+)"],
             "depNameTemplate": "k0sproject/k0s",
             "versioningTemplate": "semver-coerced",
             "datasourceTemplate": "github-releases"
