@@ -5,7 +5,7 @@ metadata:
   name: cluster-applications
 spec:
   interval: 5m
-  url: https://github.com/muhlba91/muehlbachler-public-services-cluster-applications.git
+  url: https://github.com/muhlba91/homelab-home-cluster-applications.git
   ref:
     branch: main
   ignore: |
