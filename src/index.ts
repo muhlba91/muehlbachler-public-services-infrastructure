@@ -20,6 +20,7 @@ import {
 import { createExternalDNSResources } from './lib/external_dns';
 import { createFluxResources } from './lib/flux';
 import { createHarborResources } from './lib/harbor';
+import { createKeycloakResources } from './lib/keycloak';
 import { createPostgresql } from './lib/postgresql';
 import { createDir } from './lib/util/create_dir';
 import { readFileContents } from './lib/util/file';
@@ -48,6 +49,7 @@ export = async () => {
   createExternalDNSResources();
   createCertManagerResources();
   createHarborResources();
+  createKeycloakResources();
   createVeleroResources();
 
   // cluster servers
