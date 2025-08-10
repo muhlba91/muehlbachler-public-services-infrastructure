@@ -11,7 +11,7 @@ export const createKeycloakResources = () => {
   writeToVault(
     'keycloak-credentials',
     adminPassword.password.apply((password) =>
-      JSON.stringify({ credentials: password }),
+      JSON.stringify({ 'admin-password': password }),
     ),
     `kubernetes-${globalName}-cluster`,
   );
