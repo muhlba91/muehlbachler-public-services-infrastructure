@@ -18,6 +18,7 @@ export const environment = getStack();
 const config = new Config();
 export const bucketId = config.require('bucketId');
 export const backupBucketId = config.require<string>('backupBucketId');
+export const harborBucketId = config.require<string>('harborBucketId');
 export const networkConfig = config.requireObject<NetworkConfig>('network');
 export const clusterConfig = config.requireObject<ClusterConfig>('cluster');
 export const k0sConfig = config.requireObject<K0sConfig>('k0s');

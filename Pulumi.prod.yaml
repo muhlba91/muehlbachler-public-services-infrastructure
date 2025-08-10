@@ -84,3 +84,4 @@ config:
   muehlbachler-public-services:secretStores:
     vault: true
   muehlbachler-public-services:username: proxmox
+  muehlbachler-public-services:harborBucketId: harbor-a24964b0-32e7-4792-8dc4-5c0b27237405
