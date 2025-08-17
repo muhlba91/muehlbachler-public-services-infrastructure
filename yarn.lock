@@ -300,11 +300,11 @@ __metadata:
   linkType: soft
 
 "@muhlba91/pulumi-proxmoxve@npm:^7.0.0":
-  version: 7.3.0
-  resolution: "@muhlba91/pulumi-proxmoxve@npm:7.3.0"
+  version: 7.4.0
+  resolution: "@muhlba91/pulumi-proxmoxve@npm:7.4.0"
   dependencies:
     "@pulumi/pulumi": "npm:^3.0.0"
-  checksum: 10c0/6582888f66cea287fe9d23e65ceba56f6b18723ad09a60aada200317fae83876e43087ec29cce59f66a016a19e027d30cdda44d80c79ab69ce14094d17310190
+  checksum: 10c0/277b355e619895c1bcf01e9e914b0d47b2a30c5743c1061cacce2db30a10eff2d194ba3c59ac6e4af45897313a6c71b363ad283d6cf17e379acf9e7d8261b177
   languageName: node
   linkType: hard
 
