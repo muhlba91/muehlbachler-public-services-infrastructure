@@ -171,7 +171,7 @@ jobs:
           role-to-assume: ${{ env.AWS_IDENTITY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - uses: fluxcd/flux2/action@a8e0ea495d34c4f9eb39d6c4f785b410d3a885a1 # main
+      - uses: fluxcd/flux2/action@46aa068fda2890afbe3ad6c9480f6c4f42df1305 # main
 
       - run: |
           yarn install --immutable
