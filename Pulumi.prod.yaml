@@ -1,7 +1,6 @@
 secretsprovider: gcpkms://projects/public-services-402810/locations/europe/keyRings/infrastructure-encryption/cryptoKeys/infrastructure-encryption
 encryptedkey: CiQAvgA/tzI/uiMTwl8epBxgBY7acj5WYYnmu8x68JLvMdmdFlASSQB99kCJvJ+xFW/9sREQAvBMQc2sOxhIJOrCl9j9sLD+Dv4SDueNNvrOnAZj7XOLENRK8Mf4EJ9KMhXql3JAK94ZPhXSMr/H93M=
 config:
-  muehlbachler-public-services:backupBucketId: infrastructure-backups-87d6dbd4-4928-4cdc-8d9d-2b19417489d9
   muehlbachler-public-services:bucketId: infrastructure-assets-87d6dbd4-4928-4cdc-8d9d-2b19417489d9
   muehlbachler-public-services:cluster:
     featureGates:
@@ -43,9 +42,6 @@ config:
         roles:
           - controller+worker
         startupOrder: 100
-  muehlbachler-public-services:database:
-    database: {}
-    users: []
   muehlbachler-public-services:gcp:
     dnsProject: muehlbachler-dns
     encryptionKey:
@@ -84,4 +80,3 @@ config:
   muehlbachler-public-services:secretStores:
     vault: true
   muehlbachler-public-services:username: proxmox
-  muehlbachler-public-services:harborBucketId: harbor-a24964b0-32e7-4792-8dc4-5c0b27237405

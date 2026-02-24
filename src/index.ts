@@ -19,9 +19,6 @@ import {
 } from './lib/configuration';
 import { createExternalDNSResources } from './lib/external_dns';
 import { createFluxResources } from './lib/flux';
-import { createHarborResources } from './lib/harbor';
-import { createKeycloakResources } from './lib/keycloak';
-import { createPostgresql } from './lib/postgresql';
 import { createDir } from './lib/util/create_dir';
 import { readFileContents } from './lib/util/file';
 import { createRandomPassword } from './lib/util/random';
@@ -29,7 +26,6 @@ import { sortedServerData } from './lib/util/sort';
 import { createSSHKey } from './lib/util/ssh_key';
 import { writeFilePulumiAndUploadToS3 } from './lib/util/storage';
 import { renderTemplate } from './lib/util/template';
-import { createVeleroResources } from './lib/velero';
 
 export = async () => {
   createDir('outputs');
@@ -42,15 +38,9 @@ export = async () => {
   const userPassword = createRandomPassword('server', { special: false });
   const sshKey = createSSHKey('public-services', {});
 
-  // database
-  createPostgresql();
-
   // // Kubernetes cloud resources
   createExternalDNSResources();
   createCertManagerResources();
-  createHarborResources();
-  createKeycloakResources();
-  createVeleroResources();
 
   // cluster servers
   const clusterData = all([
