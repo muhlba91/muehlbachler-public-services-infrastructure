@@ -157,7 +157,7 @@ jobs:
           workload_identity_provider: ${{ env.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
 
-      - uses: fluxcd/flux2/action@8362c887910a46c18cfd582e9daa2f756ddce4a8 # main
+      - uses: fluxcd/flux2/action@ac71dd88a3e6170a068873ea78aafe90f8c9c82c # main
 
       - run: |
           yarn install --immutable
