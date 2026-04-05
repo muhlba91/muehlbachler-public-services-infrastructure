@@ -360,7 +360,7 @@ __metadata:
   resolution: "@muhlba91/muehlbachler-public-services-infrastructure@workspace:."
   dependencies:
     "@eslint/compat": "npm:^2.0.0"
-    "@muhlba91/pulumi-proxmoxve": "npm:^7.9.0"
+    "@muhlba91/pulumi-proxmoxve": "npm:^8.0.0"
     "@pulumi/aws": "npm:^7.0.0"
     "@pulumi/command": "npm:^1.0.0"
     "@pulumi/gcp": "npm:^9.0.0"
@@ -390,12 +390,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@muhlba91/pulumi-proxmoxve@npm:^7.9.0":
-  version: 7.13.0
-  resolution: "@muhlba91/pulumi-proxmoxve@npm:7.13.0"
+"@muhlba91/pulumi-proxmoxve@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@muhlba91/pulumi-proxmoxve@npm:8.0.0"
   dependencies:
     "@pulumi/pulumi": "npm:^3.0.0"
-  checksum: 10c0/13dfda820d535293ce273e28c18e8e3b32d7f934ade9f80722203b6de08c1dc517b43a715306cf395973971146df5491092d909beb4dce9d2fa02ed18ebfa5b4
+  checksum: 10c0/313bf6ac3ec963c2ea72dec437a29e83eb71ef0573c1e62070fe0b42f14f1f5c4d0296467195951ae6c548320a81a1d133aa42ccde01be8eaaeb68e57a6a289c
   languageName: node
   linkType: hard
 
