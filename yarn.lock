@@ -985,13 +985,13 @@ __metadata:
   linkType: hard
 
 "@pulumi/gcp@npm:^9.0.0":
-  version: 9.19.0
-  resolution: "@pulumi/gcp@npm:9.19.0"
+  version: 9.20.0
+  resolution: "@pulumi/gcp@npm:9.20.0"
   dependencies:
     "@npmcli/package-json": "npm:^6.2.0"
     "@pulumi/pulumi": "npm:^3.142.0"
     "@types/express": "npm:^4.16.0"
-  checksum: 10c0/d65b05ea7b13641b62cb68fe6bd07925ab87a2b1cad0f71096e1ddb94bf60e21384b3dd32d2b3c1aa61a5ddf1701ffc55631769677309cecc4379dcdb4932a16
+  checksum: 10c0/776d45997d484f7f73a38a05c3452ce799861601460721afdaf1adce479e5cd47195d60f1b787e7656da1f241c09e908512c72dae02c0de2646d9e0075c0bc08
   languageName: node
   linkType: hard
 
